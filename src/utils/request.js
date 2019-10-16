@@ -26,7 +26,7 @@ axios.interceptors.request.use(
             'Content-Type':'application/json'
         };
 
-        if(token){
+        if(token && config.url !=='/login'){
             config.headers = {
                 'Content-Type':'application/json;charset=UTF-8',
                 'X-Xsrf-Token': token
@@ -53,7 +53,7 @@ axios.interceptors.response.use(
         if(error && error.response){
             switch (error.response.status){
                 case 401:
-                    // store.dispatch("setToken",'')
+                    store.dispatch("setToken",'')
                     router.push({
                         path:"/login",
                         querry:{redirect:router.currentRoute.fullPath}//从哪个页面跳转
@@ -82,16 +82,16 @@ axios.interceptors.response.use(
  */
 
 export function getData(url,params={},isLoading){
-    // isLoading ? store.dispatch("setLoading",true) : '';
+    isLoading ? store.dispatch("setLoading", true) : '';
     return new Promise((resolve,reject) => {
         axios.get(url,{
             params:params
         }).then(response => {
-                // isLoading ? store.dispatch("setLoading",false) : '';
+                isLoading ? store.dispatch("setLoading",false) : '';
                 resolve(response);
             })
             .catch(err => {
-                // isLoading ? store.dispatch("setLoading",false) : '';
+                isLoading ? store.dispatch("setLoading",false) : '';
                 reject(err)
             })
     })
@@ -105,17 +105,20 @@ export function getData(url,params={},isLoading){
  * @returns {Promise}
  */
 
-export function postData(url,data = {},isLoading){
-    isLoading ? store.dispatch("setLoading",true) : '';
+export function postData(url, data = {}, isLoading){
+    isLoading ? store.dispatch("setLoading", true) : '';
     return new Promise((resolve,reject) => {
         axios.post(url,data)
             .then(response => {
-                isLoading ? store.dispatch("setLoading",false) : '';
-                resolve(response);
+                setTimeout(function () {
+                    isLoading ? store.dispatch("setLoading",false) : '';
+                    resolve(response);
+                },2000)
+
             }).catch(err => {
-            isLoading ? store.dispatch("setLoading",false) : '';
-            reject(err.data)
-        })
+                isLoading ? store.dispatch("setLoading",false) : '';
+                reject(err.data)
+            })
     })
 }
 
@@ -126,7 +129,8 @@ export function postData(url,data = {},isLoading){
  * @returns {Promise}
  */
 
-export function deleteData(url,data = {}){
+export function deleteData(url, data = {}, isLoading){
+    isLoading ? store.dispatch("setLoading", true) : '';
     return new Promise((resolve,reject) => {
         axios.delete(url,{
                 params: data
@@ -146,12 +150,15 @@ export function deleteData(url,data = {}){
  * @returns {Promise}
  */
 
-export function putData(url,data = {}){
+export function putData(url, data = {}, isLoading){
     return new Promise((resolve,reject) => {
+        isLoading ? store.dispatch("setLoading", true) : '';
         axios.put(url,data)
             .then(response => {
+                isLoading ? store.dispatch("setLoading",false) : '';
                 resolve(response);
             }).catch(err => {
+                isLoading ? store.dispatch("setLoading",false) : '';
                 reject(err.data)
         })
     })
@@ -165,14 +172,16 @@ export function putData(url,data = {}){
  * @returns {Promise}
  */
 
-export function allData(dataArray){
+export function allData(dataArray, isLoading){
     return new Promise((resolve,reject) => {
+        isLoading ? store.dispatch("setLoading", true) : '';
         axios.all(dataArray)
-            .then(axios.spread(function (res) {
+            .then(axios.spread(function () {
+                isLoading ? store.dispatch("setLoading",false) : '';
                 resolve(arguments)
-                console.log(arguments)
             })).catch(err => {
+            isLoading ? store.dispatch("setLoading",false) : '';
                 reject(err)
-        })
+            })
     })
 }

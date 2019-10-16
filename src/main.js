@@ -8,7 +8,7 @@ import vuescroll from 'vuescroll';
 import 'vuescroll/dist/vuescroll.css';
 import VueI18n from 'vue-i18n'
 import messages from '@/assets/locals/index'
-// import locale from 'element-ui/lib/locale'
+import locale from 'element-ui/lib/locale'
 import './registerServiceWorker'
 
 
@@ -23,18 +23,14 @@ Vue.use(VueI18n)
 const i18n = new VueI18n({
     //定义默认语言
     locale: 'zhCN',
-    // missing: function(locale, key, vm){
-    //     return key
-    // },
-    // silentTranslationWarn: true,
     messages
 });
+console.log(messages)
 
-Vue.use(ElementUI, { //兼容element 多语言切换
-    i18n: (key, value) => i18n.t(key, value)
-})
-
-// locale.i18n((key, value) => i18n.t(key, value))
+// Vue.use(ElementUI, { //兼容element 多语言切换
+//     i18n: (key, value) => i18n.t(key, value)
+// })
+locale.i18n((key, value) => i18n.t(key, value))
 
 new Vue({
     router,

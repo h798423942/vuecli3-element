@@ -27,7 +27,7 @@ const router = new Router({
               name: 'dataList',
               meta: {
                   requireAuth:true,
-                  title: 'dataList'
+                  title: '质量诊断'
               }
           },
           {
@@ -37,7 +37,7 @@ const router = new Router({
               name: 'tableList',
               meta: {
                   requireAuth:true,
-                  title: 'tableList'
+                  title: '摄像头列表'
               }
           }]
     },

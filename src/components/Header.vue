@@ -5,7 +5,16 @@
         </div>
         <div class="header-content">
             <div v-if="(!isShowMenu && isMobile) || !isMobile">
-                <span class="name">admin</span>
+                <el-dropdown @command="userOption">
+                    <span class="el-dropdown-link name" style="color:#fff;">
+                      admin
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="userInfo">用户信息</el-dropdown-item>
+                        <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+
                 <el-dropdown @command="checkLang">
                     <span class="el-dropdown-link" style="color:#fff;">
                     <!--<i class="el-icon-setting el-icon&#45;&#45;right"></i>-->
@@ -54,6 +63,22 @@
             checkLang: function (type) {
                 this.$i18n.locale = type;
                 this.lanName = type === 'en' ? 'English' : '中文'
+            },
+            userOption: function (type) {
+                type === 'userInfo' ? this.goUserInfoPage() : this.logout();
+            },
+            goUserInfoPage: function () {
+                console.log("go userinfo page")
+            },
+            logout: function () {
+                this.$store.dispatch('logout').then(res=>{
+                    this.$router.push({path: 'login'})
+                }).catch(error=>{
+                    this.$notify.error({
+                        title: '退出登录',
+                        message: '退出登录失败'
+                    });
+                })
             }
         }
     }

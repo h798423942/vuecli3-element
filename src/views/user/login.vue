@@ -1,6 +1,7 @@
 <template>
     <div class="main-content">
-        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <div class="login-box">登录</div>
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="50px" class="demo-ruleForm">
             <el-form-item label="账号" prop="userName">
                 <el-input type="text" v-model="ruleForm.userName" autocomplete="off"></el-input>
             </el-form-item>
@@ -35,9 +36,13 @@
         left:0;
         bottom:0;
         right:0;
-        width:50%;
+        width:25%;
         height:50%;
         margin:auto;
+        .login-box{
+            padding: 30px;
+            text-align: center;
+        }
     }
     @media screen and (max-width: 768px) {
         .main-content {
@@ -46,6 +51,7 @@
     }
 </style>
 <script>
+    import { loginService } from "@/service/api";
     export default {
         data() {
             var checkAge = (rule, value, callback) => {
@@ -86,6 +92,8 @@
             let validateUserName = (rule, value, callback) => {
                 if (!value) {
                     return callback(new Error('账号不能为空'));
+                }else{
+                    callback();
                 }
             };
 
@@ -102,23 +110,39 @@
                     ],
                     pass: [
                         { validator: validatePass, trigger: 'blur' }
-                    ],
-                    checkPass: [
-                        { validator: validatePass2, trigger: 'blur' }
-                    ],
-                    age: [
-                        { validator: checkAge, trigger: 'blur' }
                     ]
+                    // checkPass: [
+                    //     { validator: validatePass2, trigger: 'blur' }
+                    // ],
+                    // age: [
+                    //     { validator: checkAge, trigger: 'blur' }
+                    // ]
                 }
             };
         },
         methods: {
             submitForm(formName) {
-                this.$refs[formName].validate((valid) => {
+                let that = this;
+                that.$refs[formName].validate((valid) => {
                     if (valid) {
-                        alert('submit!');
+                        let params = {
+                            _username: 'tony',
+                            _passwd: '5f4dcc3b5aa765d61d8327deb882cf99'
+                        };
+
+                        loginService(params, true)
+                            .then((response)=>{
+                                let token = response && response.headers["x-xsrf-token"] ? response.headers["x-xsrf-token"] : '';
+                                that.$store.dispatch('setToken',token);
+                                that.$router.push({path: '/'});
+                                console.log(token)
+                            }).catch((response)=>{
+                                that.$notify.error({
+                                    title: '登录',
+                                    message: '登录失败'
+                                });
+                        })
                     } else {
-                        console.log('error submit!!');
                         return false;
                     }
                 });

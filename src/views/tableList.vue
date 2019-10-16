@@ -11,6 +11,7 @@
         <el-table
                 ref="multipleTable"
                 :data="tableData"
+                v-loading="loading"
                 tooltip-effect="dark"
                 style="width: 100%;margin: 30px 0"
                 @selection-change="handleSelectionChange">
@@ -71,7 +72,7 @@
 <script>
     import Pagination from "@/components/Pagination"
     import Breadcrumb from "@/components/Breadcrumb"
-    import { getAllDataService, getAreaService, getDataCenterService, getComboService} from "@/service/api"
+    import { getVideoListService } from "../service/api";
     // import Modals from "@/components/Modals"
     import {mapState,mapMutations,mapAction } from 'vuex'
     export default {
@@ -124,7 +125,8 @@
                 formLabelWidth: '120px',
                 dialogTableVisible: false,
                 dialogFormVisible: false,
-                multipleSelection: []
+                multipleSelection: [],
+                loading: true
             }
         },
         computed:{
@@ -133,7 +135,7 @@
             })
         },
         mounted(){
-            this.getComboData();
+            this.getAllData();
 
             console.log(this.$store.state.common.isMobile)
             // this.common.test2();
@@ -145,27 +147,16 @@
         },
         methods: {
             getAllData: function () {
-                let ddd  = {
-                    region_id: 24
-                }
-                let params = [getAreaService(),getDataCenterService(ddd)]
-                getAllDataService(params,false).then((res)=>{
+                let that = this;
+                getVideoListService('', false).then((res)=>{
+                    that.loading = false;
                     console.log(res)
                 }).catch((error)=>{
-                    console.log(error)
-                })
-            },
-            getComboData: function () {
-                let that  = this;
-                let params  = {
-                    id: 24
-                }
-                getComboService(params,true)
-                .then((res)=>{
-                    that.imgUrl = 'logo'
-
-                }).catch((error)=>{
-                    console.log(error)
+                    that.loading = false;
+                    that.$notify.error({
+                        title: '失败',
+                        message: '获取数据失败'
+                    });
                 })
             },
             toggleSelection(rows) {

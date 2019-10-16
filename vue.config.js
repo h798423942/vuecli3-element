@@ -91,8 +91,8 @@ module.exports = {
         hotOnly: false,
         proxy: {
             '/app': {
-                target: 'https://10.0.0.117',
-                secure: false, //https
+                target: 'http://10.0.0.114',
+                // secure: false, //https
                 changeOrigin: true,
                 pathRewrite: {
                     '^/app': ''

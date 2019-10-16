@@ -1,7 +1,11 @@
+import { loginService, logoutService } from "../../service/api";
+import { Loading } from 'element-ui';
+
 export default {
     state: {
         token: '',
         isMobile: false,
+        loading: false,
         menu: {
             isToggled: true,
             munuList:
@@ -93,6 +97,15 @@ export default {
         SET_MOBILE(state, datas){
             state.isMobile = datas;
         },
+        SET_LOADING(state, datas){
+            let options = {
+                lock: true,
+                text: 'Loading',
+                spinner: 'el-icon-loading',
+                background: 'rgba(0, 0, 0, 0.7)'
+            };
+            datas ? state.loading = Loading.service(options) : state.loading.close();
+        },
     },
     actions: {
         setToken({ commit }, datas){
@@ -109,15 +122,26 @@ export default {
         },
         isMobile({ commit }, datas){
             commit('SET_MOBILE', datas.isMobile)   //是否为手机端
-            // commit('SET_MENU_TOGGLED', datas.isMobile ? false : true)  //根据是否为手机端，切换menu默认收起或展开
-            // window.onresize = () =>{
-            //     let screenWidth =  datas.screenWidth;
-            //     if(screenWidth < 768){
-            //         commit('SET_MOBILE', true)   //是否为手机端
-            //         commit('SET_MENU_TOGGLED', false)  //根据是否为手机端，切换menu默认收起或展开
-            //     }
-            //     console.log(screenWidth)
-            // }
+        },
+        setLoading({ commit }, isLoading){
+            commit('SET_LOADING', isLoading)
+        },
+        login({ commit }){
+            return new Promise((resolve, reject) =>{
+                loginService('', true).then(res=>{
+                    let token = res && res.data.rows ? res.data.rows.token : '';
+                    commit('setToken', token)
+                    resolve(res)
+                }).catch(error=>{
+                    reject(error)
+                })
+            })
+        },
+        logout({ commit }){
+            return new Promise((resolve, reject) => {
+                commit('setToken', '');
+                resolve();
+            })
         }
     }
 }
