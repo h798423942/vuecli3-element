@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" class="themeA">
     <transition name="fade">
       <router-view></router-view>
     </transition>
   </div>
 </template>
 
-<style lang="less">
+<style lang="less" type="text/less">
 html,body{
     margin: 0;
     padding: 0;
@@ -19,9 +19,10 @@ html,body{
   text-align: center;
   color: #2c3e50;
   height: 100%;
-    .el-container{
-        height: 100%;
-    }
+  font-size: 14px;
+  .el-container{
+      height: 100%;
+  }
 }
 </style>
 <script>

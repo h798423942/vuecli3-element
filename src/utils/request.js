@@ -6,11 +6,9 @@ import store from '@/store/index.js'
 
 axios.defaults.timeout = 5000;
 if (process.env.NODE_ENV == 'development') {  //开发环境
-    axios.defaults.baseURL ='/app';
-    // axios.defaults.baseURL ='https://10.0.0.117';
+    axios.defaults.baseURL ='/api';
 }  else if (process.env.NODE_ENV == 'production') {  //生产环境
-    axios.defaults.baseURL = window.location.port ? `${window.location.protocol}//${window.location.hostname}:
-        ${window.location.port}` : `${window.location.protocol}//${window.location.hostname}`;
+    axios.defaults.baseURL = window.location.port ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}` : `${window.location.protocol}//${window.location.hostname}`;
 }
 
 //http request 拦截器
@@ -19,7 +17,6 @@ axios.interceptors.request.use(
         let token = localStorage.getItem('token');
 
         if(config.method === 'POST'){
-            // config.data = qs.stringify(config.data);
             config.data = JSON.stringify(config.data);
         }
         config.headers = {
@@ -43,7 +40,7 @@ axios.interceptors.request.use(
 //http response 拦截器
 axios.interceptors.response.use(
     response => {
-        if(response.status === 200 && response.data.code !==-1){
+        if(response.status === 200){
             return Promise.resolve(response);
         }else{
             return Promise.reject(response);

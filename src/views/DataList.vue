@@ -1,6 +1,7 @@
 <template>
     <div class="main-content">
         <Breadcrumb></Breadcrumb>
+        <div class="textColor">testTheme</div>
         <el-table
                 ref="multipleTable"
                 :data="tableData"

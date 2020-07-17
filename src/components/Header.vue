@@ -5,6 +5,14 @@
         </div>
         <div class="header-content">
             <div v-if="(!isShowMenu && isMobile) || !isMobile">
+                <el-dropdown @command="checkTheme">
+                    <span class="el-dropdown-link name" style="color:#fff;">主题</span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="theme1">主题一</el-dropdown-item>
+                        <el-dropdown-item command="theme2">主题二</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+
                 <el-dropdown @command="userOption">
                     <span class="el-dropdown-link name" style="color:#fff;">
                       admin
@@ -31,7 +39,9 @@
 </template>
 
 <script>
-    import {mapState,mapMutations,mapAction } from 'vuex'
+    import {mapState, mapMutations, mapAction } from 'vuex'
+    // import theme1 from '@/assets/skin/theme1.less'
+    // import theme2 from '@/assets/skin/theme2.less'
     export default {
         data () {
             return {
@@ -67,6 +77,34 @@
             userOption: function (type) {
                 type === 'userInfo' ? this.goUserInfoPage() : this.logout();
             },
+            checkTheme: function(obj){
+                this.removeCss()
+                if(obj && obj==='theme1'){
+                    this.addCss('theme1');
+                }else{
+                    this.addCss('theme2');
+                }
+            },
+            addCss: function(name){
+                let head = document.getElementsByTagName('head').item(0);
+                const style = document.createElement('link');
+                style.href=`/theme/${name}.css`;
+                style.rel= 'stylesheet';
+                style.type= 'text/css';
+                head.appendChild(style);
+            },
+            removeCss: function(name){
+                // var filename = `theme/${name}.css`;  //移除引入的文件名
+                var filename = `theme`;  //移除引入的文件名
+                var targetelement = "link";
+                var targetattr = "href";
+                var allsuspects = document.getElementsByTagName(targetelement)
+                for (var i = allsuspects.length; i>=0 ; i--){
+                    if (allsuspects[i] && allsuspects[i].getAttribute(targetattr) != null && allsuspects[i].getAttribute(targetattr).indexOf(filename) != -1) {
+                        allsuspects[i].parentNode.removeChild(allsuspects[i])
+                    }
+                }
+            },
             goUserInfoPage: function () {
                 console.log("go userinfo page")
             },
@@ -83,7 +121,7 @@
         }
     }
 </script>
-<style lang="less" scoped>
+<style lang="less" scoped type="text/less">
     .header-box{
         display: flex;
         align-items: center;

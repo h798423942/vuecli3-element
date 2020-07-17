@@ -1,10 +1,11 @@
+const path = require("path");
 module.exports = {
 
     publicPath: process.env.NODE_ENV === 'production' ? '/' : '/',
 
     outputDir: 'dist',
 
-    assetsDir: 'static',
+    assetsDir: 'public',
 
     filenameHashing: true,
 
@@ -33,9 +34,6 @@ module.exports = {
 
         }
     },
-
-    // webpack 链接 API，用于生成和修改 webapck 配置
-    // https://github.com/mozilla-neutrino/webpack-chain
     chainWebpack: (config) => {
 
     },
@@ -46,7 +44,7 @@ module.exports = {
         modules: false,
 
         // 是否使用 css 分离插件 ExtractTextPlugin，采用独立样式文件载入，不采用 <style> 方式内联至 html 文件中
-        extract: false,
+        extract: true,
 
         // 是否构建样式地图，false 将提高构建速度
         sourceMap: false,
@@ -81,8 +79,8 @@ module.exports = {
     },
 
     // All options for webpack-dev-server are supported
-    // https://webpack.js.org/configuration/dev-server/
     devServer: {
+        contentBase: './public',
         hot: true,
         open: true,
         host: '127.0.0.1',
@@ -90,22 +88,25 @@ module.exports = {
         https: false,
         hotOnly: false,
         proxy: {
-            '/app': {
-                target: 'http://10.0.0.114',
+            '/api': {
+                target: 'http://10.0.0.99:10080',
                 // secure: false, //https
                 changeOrigin: true,
                 pathRewrite: {
-                    '^/app': ''
+                    '^/api': ''
                 }
             }
         },
     },
     // 构建时开启多进程处理 babel 编译
     parallel: require('os').cpus().length > 1,
-
-    // https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-pwa
     pwa: {},
-
     // 第三方插件配置
-    pluginOptions: {}
+    pluginOptions: {
+        'style-resources-loader': {
+            preProcessor: 'less',
+            patterns:[]
+            // patterns: [path.resolve(__dirname, "/public/theme/theme1.css")] // 引入全局样式变量
+        }
+    }
 };

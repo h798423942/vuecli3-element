@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
-// import DataList from './views/dataList'
-// import TableList from './views/tableList'
+import NProgress from 'nprogress';
+import BasicLayout from './layouts/BasicLayout.vue'
+import UserLayout from './layouts/UserLayout.vue'
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   mode: 'history',
@@ -12,50 +12,72 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
+      name: 'Home',
+      component: BasicLayout,
         meta: {
             requireAuth:true,
             title: '首页'
         },
-      redirect: {name: 'tableList'},   //默认页面
+      redirect: {name: 'TableList'},   //默认页面
       children: [
           {
               path : '/dataList',
-              // component: DataList,
-              component: () => import(/* webpackChunkName: "about" */ './views/dataList.vue'),
-              name: 'dataList',
+              component: () => import(/* webpackChunkName: "about" */ './views/DataList.vue'),
+              name: 'DataList',
               meta: {
-                  requireAuth:true,
-                  title: '质量诊断'
+                  requireAuth:false,
+                  title: '机柜产品'
               }
           },
           {
               path : '/tableList',
               // component: TableList,
-              component: () => import(/* webpackChunkName: "about" */ './views/tableList.vue'),
-              name: 'tableList',
+              component: () => import(/* webpackChunkName: "about" */ './views/TableList.vue'),
+              name: 'TableList',
               meta: {
                   requireAuth:true,
-                  title: '摄像头列表'
+                  title: '带宽列表'
               }
           }]
     },
     {
-      path: '/login',
-      name: 'login',
-      // component: Home,
-        component: () => import(/* webpackChunkName: "about" */ './views/user/login.vue'),
-      meta: {
-          requireAuth:false,
-          title: '登录'
-      },
-      children: []
+      path: '/user',
+      name: 'User',
+      component: UserLayout,
+      children: [
+          {
+              path : '/login',
+              component: () => import(/* webpackChunkName: "about" */ './views/user/Login.vue'),
+              name: 'Login',
+              meta: {
+                  requireAuth:false,
+                  title: '登录'
+              }
+          },
+          {
+              path : '/register',
+              component: () => import(/* webpackChunkName: "about" */ './views/user/Register.vue'),
+              name: 'Register',
+              meta: {
+                  requireAuth:false,
+                  title: '注册'
+              }
+          },
+      ]
     }
   ]
 });
 
+NProgress.configure({
+    easing: 'ease',  // 动画方式
+    speed: 500,  // 递增进度条的速度
+    showSpinner: false, // 是否显示加载ico
+    trickleSpeed: 200, // 自动递增间隔
+    minimum: 0.3 // 初始化时的最小百分比
+});
+
 router.beforeEach((to, from, next) => {
+    NProgress.start();
     if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
         if(localStorage.getItem('token')){ //判断本地是否存在token
             next();
@@ -68,16 +90,10 @@ router.beforeEach((to, from, next) => {
     else {
         next();
     }
-    /*如果本地 存在 token 则 不允许直接跳转到 登录页面*/
-    if(to.fullPath == "/login"){
-        if(localStorage.getItem('token')){
-            next({
-                path:from.fullPath
-            });
-        }else {
-            next();
-        }
-    }
+});
+
+router.afterEach(()=>{
+    NProgress.done()
 });
 
 export default router;
