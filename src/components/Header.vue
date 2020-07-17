@@ -78,12 +78,13 @@
                 type === 'userInfo' ? this.goUserInfoPage() : this.logout();
             },
             checkTheme: function(obj){
-                this.removeCss()
-                if(obj && obj==='theme1'){
+                this.removeCss();
+                if(obj==='theme1' && obj!==this.$store.state.common.theme){
                     this.addCss('theme1');
-                }else{
+                }else if(obj==='theme2' && obj!==this.$store.state.common.theme){
                     this.addCss('theme2');
                 }
+                this.$store.dispatch('setTheme', obj);
             },
             addCss: function(name){
                 let head = document.getElementsByTagName('head').item(0);

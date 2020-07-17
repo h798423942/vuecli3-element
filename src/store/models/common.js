@@ -6,6 +6,7 @@ export default {
         token: '',
         isMobile: false,
         loading: false,
+        theme: '',
         menu: {
             isToggled: true,
             munuList:
@@ -97,6 +98,9 @@ export default {
         SET_MOBILE(state, datas){
             state.isMobile = datas;
         },
+        SET_THEME(state, datas){
+            state.theme = datas;
+        },
         SET_LOADING(state, datas){
             let options = {
                 lock: true,
@@ -125,6 +129,9 @@ export default {
         },
         setLoading({ commit }, isLoading){
             commit('SET_LOADING', isLoading)
+        },
+        setTheme({ commit }, isLoading){
+            commit('SET_THEME', isLoading)
         },
         login({ commit }){
             return new Promise((resolve, reject) =>{
