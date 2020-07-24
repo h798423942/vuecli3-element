@@ -21,10 +21,6 @@ module.exports = {
     // 生产环境 sourceMap
     productionSourceMap: false,
 
-    // cors 相关 https://jakearchibald.com/2017/es-modules-in-browsers/#always-cors
-    // corsUseCredentials: false,
-    // webpack 配置，键值对象时会合并配置，为方法时会改写配置
-    // https://cli.vuejs.org/guide/webpack.html#simple-configuration
     configureWebpack: config => {
         if (process.env.NODE_ENV === 'production') {
             // 为生产环境修改配置
@@ -51,30 +47,9 @@ module.exports = {
 
         // css预设器配置项
         loaderOptions: {
-            // less: {
-            //     // options here will be passed to css-loader
-            //     modifyVars: {
-            //         'primary-color': '#5130ab',   //主文本颜色
-            //         'link-color': '#1DA57A',    //链接色
-            //         'border-radius-base': '2px',  //组件、浮层圆角
-            //         'font-size-base': '14px',  //主字号
-            //         'success-color': '#52c41a',                         // 成功色
-            //         'warning-color': '#faad14',                         // 警告色
-            //         'error-color': '#f5222d',                           // 错误色
-            //         'heading-color': 'rgba(0, 0, 0, .85)',              // 标题色
-            //         'text-color': 'rgba(0, 0, 0, .65)',                 // 主文本色
-            //         'text-color-secondary' : 'rgba(0, 0, 0, .45)',      // 次文本色
-            //         'disabled-color' : 'rgba(0, 0, 0, .25)',            // 失效色
-            //         'border-color-base': '#5130ab',                     // 边框色
-            //         'box-shadow-base': '0 2px 8px rgba(0, 0, 0, .15)',  // 浮层阴影
-            //         'table-row-hover-bg': '#fbfbfe',
-            //     },
-            //     javascriptEnabled: true
-            // },
-            //
-            // postcss: {
-            //     // options here will be passed to postcss-loader
-            // }
+            sass: {
+                additionalData: `@import "@/assets/skins/variables.scss";`
+            }
         }
     },
 
@@ -104,9 +79,9 @@ module.exports = {
     // 第三方插件配置
     pluginOptions: {
         'style-resources-loader': {
-            preProcessor: 'less',
-            patterns:[]
-            // patterns: [path.resolve(__dirname, "/public/theme/theme1.css")] // 引入全局样式变量
+            preProcessor: 'scss',
+            patterns: [],
+            // patterns: [path.resolve(__dirname, "@/assets/skins/variables.scss")] // 引入全局样式变量
         }
     }
 };

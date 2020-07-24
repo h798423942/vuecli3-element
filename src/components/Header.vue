@@ -5,16 +5,18 @@
         </div>
         <div class="header-content">
             <div v-if="(!isShowMenu && isMobile) || !isMobile">
+                <theme-picker></theme-picker>
+
                 <el-dropdown @command="checkTheme">
                     <span class="el-dropdown-link name" style="color:#fff;">主题</span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="theme1">主题一</el-dropdown-item>
-                        <el-dropdown-item command="theme2">主题二</el-dropdown-item>
+                        <el-dropdown-item command="custom-theme1">主题一</el-dropdown-item>
+                        <el-dropdown-item command="custom-theme2">主题二</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
 
                 <el-dropdown @command="userOption">
-                    <span class="el-dropdown-link name" style="color:#fff;">
+                    <span class="el-dropdown-link name">
                       admin
                     </span>
                     <el-dropdown-menu slot="dropdown">
@@ -40,13 +42,16 @@
 
 <script>
     import {mapState, mapMutations, mapAction } from 'vuex'
-    // import theme1 from '@/assets/skin/theme1.less'
-    // import theme2 from '@/assets/skin/theme2.less'
+    import ThemePicker from '@/components/ThemePicker'
     export default {
         data () {
             return {
                 lanName: '中文',
+                chalk: ''
             }
+        },
+        components: {
+            ThemePicker
         },
         computed:{
             isShowMenu:{
@@ -78,11 +83,13 @@
                 type === 'userInfo' ? this.goUserInfoPage() : this.logout();
             },
             checkTheme: function(obj){
-                this.removeCss();
-                if(obj==='theme1' && obj!==this.$store.state.common.theme){
-                    this.addCss('theme1');
-                }else if(obj==='theme2' && obj!==this.$store.state.common.theme){
-                    this.addCss('theme2');
+                // this.removeCss();
+                if(obj==='custom-theme1'){
+                    // this.addCss('theme1');
+                    import(/* webpackChunkName: "custom-theme1" */"@/assets/theme/theme1/index.css");
+                }else if(obj==='custom-theme2'){
+                    // this.addCss('theme2');
+                    import(/* webpackChunkName: "custom-theme2" */"@/assets/theme/theme2/index.css");
                 }
                 this.$store.dispatch('setTheme', obj);
             },
@@ -122,7 +129,7 @@
         }
     }
 </script>
-<style lang="less" scoped type="text/less">
+<style lang="scss" scoped type="text/scss">
     .header-box{
         display: flex;
         align-items: center;
@@ -141,6 +148,7 @@
             height: 100%;
             .name{
                 margin-right: 15px;
+                color: $--color-primary;
             }
             .el-icon-setting{
                 font-size: 20px;

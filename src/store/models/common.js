@@ -6,7 +6,7 @@ export default {
         token: '',
         isMobile: false,
         loading: false,
-        theme: '',
+        theme: '#dddddd',
         menu: {
             isToggled: true,
             munuList:

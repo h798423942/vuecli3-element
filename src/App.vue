@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="themeA">
+  <div id="app" :class="theme">
     <transition name="fade">
       <router-view></router-view>
     </transition>
@@ -26,12 +26,18 @@ html,body{
 }
 </style>
 <script>
+    import { mapState } from "vuex"
     export default {
         data(){
             return {
-              isMobile: false
+              isMobile: false,
             }
         },
+      computed:{
+          ...mapState({
+            theme: state => state.common.theme
+          })
+      },
         mounted(){
             let isMobile = this._isMobile() ? true : false;
             this.$store.dispatch('isMobile', {isMobile: isMobile});
