@@ -10,3 +10,11 @@ export const commonUtils = {
         return reg.test(password);
     }
 };
+
+/**
+ * @param {string} path
+ * @returns {Boolean}
+ */
+export function isExternal(path) {
+    return /^(https?:|mailto:|tel:)/.test(path)
+}

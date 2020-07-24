@@ -9,6 +9,7 @@ import 'vuescroll/dist/vuescroll.css';
 import 'nprogress/nprogress.css';
 // import '@/assets/skins/variables.scss'
 // import '@/assets/skin/index.css'
+import '@/icons' // icon
 import VueI18n from 'vue-i18n'
 import messages from '@/assets/locals/index'
 import locale from 'element-ui/lib/locale'
